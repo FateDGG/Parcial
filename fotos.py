@@ -47,9 +47,9 @@ st.set_page_config(
 
 # Ocultar parte del código, ya que esto es solo para agregar algo de estilo CSS personalizado, pero no es parte de la idea principal
 hide_streamlit_style = """
-    <style>
+	<style>
   #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
+	footer {visibility: hidden;}
   </style>
 """
 
@@ -110,4 +110,12 @@ else:
     image = Image.open(img_file_buffer)
     st.image(image, use_column_width=True)
     
-    # Inicializa una lista vacía para almacenar
+    # Realizar la predicción
+    class_name, score = import_and_predict(image, model, class_names)
+    
+    # Mostrar el resultado
+    if np.max(score) > 0.5:
+        st.subheader(f"Estudiante Identificado: {class_name}")
+        st.text(f"Puntuación de confianza: {100 * np.max(score):.2f}%")
+    else:
+        st.text("No se pudo identificar al estudiante")
