@@ -110,6 +110,7 @@ else:
     image = Image.open(img_file_buffer)
     st.image(image, use_column_width=True)
     
+    student_list = []
     # Realizar la predicción
     class_name, score = import_and_predict(image, model, class_names)
     
@@ -119,3 +120,20 @@ else:
         st.text(f"Puntuación de confianza: {100 * np.max(score):.2f}%")
     else:
         st.text("No se pudo identificar al estudiante")
+
+
+    if class_name not in student_list:
+        student_list.append(class_name)  # Agregar el nombre a la lista de estudiantes reconocidos
+        # Mostrar el resultado
+        if np.max(score) > 0.5:
+            st.subheader(f"Estudiante Identificado: {class_name}")
+            st.text(f"Puntuación de confianza: {100 * np.max(score):.2f}%")
+        else:
+            st.text("No se pudo identificar al estudiante")
+    else:
+        st.text(f"El estudiante {class_name} ya ha sido reconocido")
+
+    # Mostrar el listado de estudiantes
+    st.title("Listado de estudiantes")
+    for student in student_list:
+        st.text({student})
