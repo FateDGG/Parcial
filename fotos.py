@@ -103,11 +103,12 @@ def import_and_predict(image_data, model, class_names):
 
 class_names = open("./clases.txt", "r").readlines()
 
-# Crear una lista vacía para almacenar los estudiantes reconocidos
+# Inicializar la lista de estudiantes reconocidos
 if 'student_list' not in st.session_state:
     st.session_state['student_list'] = []
 
 img_file_buffer = st.camera_input("Capture una foto para identificar a un estudiante")
+
 if img_file_buffer is None:
     st.text("Por favor tome una foto")
 else:
