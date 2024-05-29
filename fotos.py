@@ -103,6 +103,10 @@ def import_and_predict(image_data, model, class_names):
 
 class_names = open("./clases.txt", "r").readlines()
 
+# Crear una lista vacía para almacenar los estudiantes reconocidos
+if 'student_list' not in st.session_state:
+    st.session_state['student_list'] = []
+
 img_file_buffer = st.camera_input("Capture una foto para identificar a un estudiante")
 if img_file_buffer is None:
     st.text("Por favor tome una foto")
@@ -110,7 +114,6 @@ else:
     image = Image.open(img_file_buffer)
     st.image(image, use_column_width=True)
     
-    student_list = []
     # Realizar la predicción
     class_name, score = import_and_predict(image, model, class_names)
     
@@ -118,12 +121,12 @@ else:
     if np.max(score) > 0.5:
         st.subheader(f"Estudiante Identificado: {class_name}")
         st.text(f"Puntuación de confianza: {100 * np.max(score):.2f}%")
-        if class_name not in student_list:
-            student_list.append(class_name)  # Agregar el nombre a la lista de estudiantes reconocidos
+        if class_name not in st.session_state['student_list']:
+            st.session_state['student_list'].append(class_name)  # Agregar el nombre a la lista de estudiantes reconocidos
     else:
         st.text("No se pudo identificar al estudiante")
 
     # Mostrar el listado de estudiantes
     st.title("Listado de estudiantes")
-    for student in student_list:
+    for student in st.session_state['student_list']:
         st.text(student)
